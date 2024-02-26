@@ -18,12 +18,14 @@ std::unique_ptr<std::reference_wrapper<ll::plugin::NativePlugin>>
     selfPluginInstance; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
 auto disable(ll::plugin::NativePlugin& /*self*/) -> bool {
-    unloadHook();
+    removeListener();
+    unregisterPAPI();
     return true;
 }
 
 auto enable(ll::plugin::NativePlugin& /*self*/) -> bool {
-    loadHook();
+    registerPAPI();
+    listenEvent();
     return true;
 }
 

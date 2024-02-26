@@ -3,7 +3,9 @@
 
 std::string defaultConfig = R"({
     "ChatFormat": "[%chatformatter_dimension%] {player} >> {message}",
-    "DimensionIdMap": {
-        "example": -1
+    "DimensionNameMap": {
+        "Overworld": "Overworld",
+        "Nether": "Nether",
+        "TheEnd": "The End"
     }
 })";

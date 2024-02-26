@@ -8,22 +8,21 @@ std::string formatMessage(std::string_view author, std::string_view message, Pla
     return result;
 }
 
-LL_TYPE_INSTANCE_HOOK(
-    TextPacketHook,
-    HookPriority::Highest,
-    TextPacket,
-    "?write@TextPacket@@UEBAXAEAVBinaryStream@@@Z",
-    void,
-    class BinaryStream& stream
-) {
-    if (mType == TextPacketType::Chat) {
-        auto pl  = ll::service::getLevel()->getPlayer(mAuthor);
-        mMessage = formatMessage(mAuthor, mMessage, pl);
-        mAuthor.clear();
-    }
-    origin(stream);
+void listenEvent() {
+    auto& eventBus = ll::event::EventBus::getInstance();
+    eventBus.emplaceListener<GMLIB::Event::PacketEvent::TextPacketWriteBeforeEvent>(
+        [](GMLIB::Event::PacketEvent::TextPacketWriteBeforeEvent& ev) {
+            auto& pkt = ev.getPacket();
+            if (pkt.mType == TextPacketType::Chat) {
+                auto pl      = ll::service::getLevel()->getPlayer(pkt.mAuthor);
+                pkt.mMessage = formatMessage(pkt.mAuthor, pkt.mMessage, pl);
+                pkt.mAuthor.clear();
+            }
+        }
+    );
 }
 
-void loadHook() { ll::memory::HookRegistrar<TextPacketHook>().hook(); }
-
-void unloadHook() { ll::memory::HookRegistrar<TextPacketHook>().unhook(); }
+void removeListener() {
+    auto& eventBus = ll::event::EventBus::getInstance();
+    eventBus.removePluginListeners("ChatFormatter");
+}

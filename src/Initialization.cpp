@@ -4,8 +4,8 @@
 GMLIB::Files::JsonConfig* Config = nullptr;
 
 namespace ConfigData {
-std::string                          mFormat;
-std::unordered_map<int, std::string> mDimMap;
+std::string                                  mFormat;
+std::unordered_map<std::string, std::string> mDimMap;
 } // namespace ConfigData
 
 void initConfig() {
@@ -13,19 +13,19 @@ void initConfig() {
     Config->init();
     ConfigData::mFormat =
         Config->getValue<std::string>({"ChatFormat"}, "[%chatformatter_dimension%] {player} >> {message}");
-    auto list = Config->getValue({"DimensionIdMap"}, nlohmann::json::object());
+    auto list = Config->getValue({"DimensionNameMap"}, nlohmann::json::object());
     for (nlohmann::json::iterator it = list.begin(); it != list.end(); ++it) {
-        ConfigData::mDimMap[it.value()] = it.key();
+        ConfigData::mDimMap[it.key()] = it.value();
     }
 }
 
 std::string getDimensionName(Player* pl) {
     if (pl) {
-        auto dimid = pl->getDimensionId();
-        if (ConfigData::mDimMap.count(dimid)) {
-            return ConfigData::mDimMap[dimid];
+        auto dimName = pl->getDimension().mName;
+        if (ConfigData::mDimMap.count(dimName)) {
+            return ConfigData::mDimMap[dimName];
         }
-        return pl->getDimension().mName;
+        return dimName;
     }
     return "unkown";
 }
@@ -38,7 +38,6 @@ void registerPAPI() {
     );
 }
 
-void initPlugin() {
-    initConfig();
-    registerPAPI();
-}
+void unregisterPAPI() { GMLIB::Server::PlaceholderAPI::unRegisterPlaceholder("chatformatter_dimension"); }
+
+void initPlugin() { initConfig(); }
