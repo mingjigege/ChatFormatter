@@ -1,0 +1,28 @@
+{
+    "format_version": 2,
+    "tooth": "github.com/GroupMountain/ChatFormatter",
+    "version": "0.9.0",
+    "info": {
+        "name": "ChatFormatter",
+        "description": "Custom chat format, support placeholder api.",
+        "author": "GroupMountain",
+        "source": "github.com/GroupMountain/ChatFormatter",
+        "tags": [
+            "levilamina",
+            "chat",
+            "gmlib"
+        ]
+    },
+    "asset_url": "https://github.com/GroupMountain/ChatFormatter/releases/download/v0.9.0/ChatFormatter-windows-x64.zip",
+    "dependencies": {
+        "github.com/GroupMountain/GMLIB": ">=0.9.0"
+    },
+    "files": {
+        "place": [
+            {
+                "src": "ChatFormatter/*",
+                "dest": "plugins/ChatFormatter"
+            }
+        ]
+    }
+}
