@@ -1,62 +1,40 @@
 #include "Entry.h"
 #include "Global.h"
-#include <fmt/format.h>
-#include <functional>
-#include <ll/api/Config.h>
-#include <ll/api/io/FileUtils.h>
-#include <ll/api/plugin/NativePlugin.h>
-#include <ll/api/plugin/PluginManagerRegistry.h>
-#include <memory>
-#include <stdexcept>
+
 ll::Logger logger(PLUGIN_NAME);
 
-namespace change_this {
+namespace ChatFormatter {
 
-namespace {
+std::unique_ptr<Entry>& Entry::getInstance() {
+    static std::unique_ptr<Entry> instance;
+    return instance;
+}
 
-std::unique_ptr<std::reference_wrapper<ll::plugin::NativePlugin>>
-    selfPluginInstance; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+bool Entry::load() {
+    initPlugin();
+    return true;
+}
 
-auto disable(ll::plugin::NativePlugin& /*self*/) -> bool {
+bool Entry::enable() {
+    registerPAPI();
+    listenEvent();
+    logger.info("ChatFormatter Loaded!");
+    logger.info("Author: GroupMountain");
+    logger.info("Repository: https://github.com/GroupMountain/ChatFormatter");
+    return true;
+}
+
+bool Entry::disable() {
     removeListener();
     unregisterPAPI();
     return true;
 }
 
-auto enable(ll::plugin::NativePlugin& /*self*/) -> bool {
-    registerPAPI();
-    listenEvent();
+bool Entry::unload() {
+    getInstance().reset();
     return true;
 }
 
-auto load(ll::plugin::NativePlugin& self) -> bool {
-    selfPluginInstance = std::make_unique<std::reference_wrapper<ll::plugin::NativePlugin>>(self);
-    initPlugin();
-    return true;
-}
+} // namespace ChatFormatter
 
-auto unload(ll::plugin::NativePlugin& self) -> bool {
-    selfPluginInstance.reset();
-    return true;
-}
-
-} // namespace
-
-auto getSelfPluginInstance() -> ll::plugin::NativePlugin& {
-    if (!selfPluginInstance) {
-        throw std::runtime_error("selfPluginInstance is null");
-    }
-
-    return *selfPluginInstance;
-}
-
-} // namespace change_this
-
-extern "C" {
-_declspec(dllexport) auto ll_plugin_disable(ll::plugin::NativePlugin& self) -> bool {
-    return change_this::disable(self);
-}
-_declspec(dllexport) auto ll_plugin_enable(ll::plugin::NativePlugin& self) -> bool { return change_this::enable(self); }
-_declspec(dllexport) auto ll_plugin_load(ll::plugin::NativePlugin& self) -> bool { return change_this::load(self); }
-_declspec(dllexport) auto ll_plugin_unload(ll::plugin::NativePlugin& self) -> bool { return change_this::unload(self); }
-}
+LL_REGISTER_PLUGIN(ChatFormatter::Entry, ChatFormatter::Entry::getInstance());

@@ -2,6 +2,9 @@
     "name": "${pluginName}",
     "entry": "${pluginFile}",
     "type": "native",
+    "version": "0.9.1",
+    "author": "GroupMountain",
+    "description": "Custom Chat Format",
     "dependencies": [
         {
             "name": "GMLIB"
