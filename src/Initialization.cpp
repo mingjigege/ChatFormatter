@@ -21,13 +21,14 @@ void initConfig() {
 
 std::string getDimensionName(Player* pl) {
     if (pl) {
-        auto dimName = pl->getDimension().mName;
+        auto dim     = &pl->getDimension();
+        auto dimName = ll::memory::dAccess<std::string>(dim, 0x148);
         if (ConfigData::mDimMap.count(dimName)) {
             return ConfigData::mDimMap[dimName];
         }
         return dimName;
     }
-    return "unkown";
+    return "unknown";
 }
 
 void registerPAPI() {
