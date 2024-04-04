@@ -10,10 +10,6 @@ std::string formatMessage(std::string_view author, std::string_view message, Pla
 
     for (const auto& word : forbiddenWords) {
         if (result.find(word) != std::string::npos) {
-            if (message.size() > 15) {
-                result = "太长啦";
-                break;
-            }
             std::string replacement(word.length(), '*');
             ll::utils::string_utils::replaceAll(result, word, replacement);
         }
