@@ -8,6 +8,7 @@ extern ll::Logger logger;
 namespace ConfigData {
 extern std::string                                  mFormat;
 extern std::unordered_map<std::string, std::string> mDimMap;
+extern std::unordered_set<std::string>              mBan;
 } // namespace ConfigData
 
 extern void initPlugin();
