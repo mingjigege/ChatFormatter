@@ -20,7 +20,7 @@ bool Entry::enable() {
     listenEvent();
     logger.info("ChatFormatter Loaded!");
     logger.info("Author: GroupMountain");
-    logger.info("ChatFormatter违禁词版");
+    logger.info("Repository: https://github.com/GroupMountain/ChatFormatter");
     return true;
 }
 
