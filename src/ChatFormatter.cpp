@@ -1,10 +1,8 @@
 #include "Global.h"
 
-// Define a set to store forbidden words
-std::unordered_set<std::string> forbiddenWords = {"word1", "word2", "word3"}; // Add your forbidden words here
-
 std::string formatMessage(std::string_view author, std::string_view message, Player* pl) {
     std::string result = ConfigData::mFormat;
+    auto& forbiddenWords = ConfigData::mBan;
     GMLIB::Server::PlaceholderAPI::translate(result, pl);
     ll::utils::string_utils::replaceAll(result, "{player}", author);
     ll::utils::string_utils::replaceAll(result, "{message}", message);
